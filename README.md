@@ -17,25 +17,26 @@ An MCP (Model Context Protocol) server that wraps [gkeepapi](https://github.com/
 
 ## Getting a Master Token
 
-Google deprecated direct password authentication. You must obtain a master token once using `gpsoauth`:
+Google has restricted direct password-based authentication, so obtaining a master token requires a browser-based flow. The most reliable method is:
+
+1. Open `https://accounts.google.com/EmbeddedSetup` in your browser and log in fully (including 2-step verification if enabled)
+2. After login, open DevTools → **Application** (Chrome) or **Storage** (Firefox) → Cookies → `accounts.google.com`
+3. Find the cookie named **`oauth_token`** (value starts with `oauth2_4/` or `oauth2_1/`) and copy it
+4. Run the following to exchange it for a master token:
 
 ```bash
-pip install gpsoauth
+python3 -c "
+import gpsoauth, getpass
+email = input('Google email: ')
+oauth_token = getpass.getpass('oauth_token cookie value: ')
+result = gpsoauth.exchange_token(email, oauth_token, '0123456789abcdef')
+print(result.get('Token', result))
+"
 ```
 
-```python
-import gpsoauth
+The resulting `aas_et/...` string is your `GOOGLE_MASTER_TOKEN`.
 
-# Run this once on a machine where you can complete browser verification
-result = gpsoauth.perform_master_login(
-    "your@gmail.com",
-    "your-password",
-    "android-device-id",  # any string, e.g. "my-laptop"
-)
-print(result.get("Token"))  # Save this as GOOGLE_MASTER_TOKEN
-```
-
-If Google requires 2-step verification, a URL will be printed — visit it in a browser, approve the login, then re-run the script.
+> For more context and alternative approaches, see [kiwiz/gkeepapi#171](https://github.com/kiwiz/gkeepapi/issues/171).
 
 ## Installation
 
