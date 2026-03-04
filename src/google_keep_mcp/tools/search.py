@@ -2,7 +2,7 @@ from __future__ import annotations
 from mcp.server.fastmcp import FastMCP
 
 from ..models import ListNotesResult
-from ..server import get_keep
+from .._state import get_keep
 from ._helpers import note_to_model
 
 

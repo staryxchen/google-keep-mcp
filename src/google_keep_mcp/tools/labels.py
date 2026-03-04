@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from mcp.server.fastmcp import FastMCP
 
 from ..models import LabelInfo, ToolResult
-from ..server import get_keep
+from .._state import get_keep
 
 
 class ListLabelsResult(BaseModel):

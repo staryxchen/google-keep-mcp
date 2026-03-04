@@ -10,26 +10,16 @@ from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
 
 from .config import Settings
-from .tools import notes, lists, search, labels
+from . import _state
 
 load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-_keep: gkeepapi.Keep | None = None
-
-
-def get_keep() -> gkeepapi.Keep:
-    """Return the authenticated Keep client, raising if not yet initialized."""
-    if _keep is None:
-        raise RuntimeError("Keep client not initialized. Server may not have started correctly.")
-    return _keep
-
 
 @asynccontextmanager
 async def lifespan(app: FastMCP) -> AsyncIterator[None]:
     """Authenticate and sync Keep on startup; persist cache on shutdown."""
-    global _keep
     settings = Settings()
 
     logging.basicConfig(level=getattr(logging, settings.log_level))
@@ -53,7 +43,7 @@ async def lifespan(app: FastMCP) -> AsyncIterator[None]:
                 settings.google_master_token,
             )
 
-        _keep = keep_client
+        _state._keep = keep_client
         logger.info("Authentication successful. Keep client ready.")
         yield
 
@@ -61,13 +51,13 @@ async def lifespan(app: FastMCP) -> AsyncIterator[None]:
         logger.error("Authentication failed: %s", e)
         raise
     finally:
-        if _keep is not None and settings.cache_file:
+        if _state._keep is not None and settings.cache_file:
             os.makedirs(os.path.dirname(os.path.abspath(settings.cache_file)), exist_ok=True)
-            state = _keep.dump()
+            state = _state._keep.dump()
             with open(settings.cache_file, "w") as f:
                 json.dump(state, f)
             logger.info("State persisted to %s", settings.cache_file)
-        _keep = None
+        _state._keep = None
 
 
 mcp = FastMCP(
@@ -79,6 +69,9 @@ mcp = FastMCP(
     ),
     lifespan=lifespan,
 )
+
+# Import tool modules after mcp is defined to avoid circular imports
+from .tools import notes, lists, search, labels  # noqa: E402
 
 notes.register(mcp)
 lists.register(mcp)

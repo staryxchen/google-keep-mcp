@@ -4,7 +4,7 @@ import gkeepapi
 from mcp.server.fastmcp import FastMCP
 
 from ..models import ToolResult
-from ..server import get_keep
+from .._state import get_keep
 from ._helpers import note_to_model
 
 
