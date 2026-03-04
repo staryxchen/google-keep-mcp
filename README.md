@@ -134,6 +134,29 @@ uv pip install -e ".[dev]"
 pytest tests/ -v
 ```
 
+## Use Cases in Development Workflows
+
+Google Keep is often used as a lightweight task and note system alongside coding work. With this MCP server, Claude can read and write Keep directly, enabling workflows like:
+
+**Task management during coding sessions**
+- "What's on my `state_todo` list for this project?" — Claude queries notes by label and summarizes what's pending
+- "Mark the authentication task as doing" — Claude removes the `state_todo` label and adds `state_doing`
+- "Add a note that the rate limiter is blocking the deploy" — Claude creates a note tagged `state_blocking` with context you dictate
+
+**Capturing decisions and context while coding**
+- "Save a note with today's architecture decision: we chose SSE over polling because..." — keeps a searchable log without leaving the editor
+- "Search my notes for anything related to the OAuth flow" — Claude searches across all notes and surfaces relevant ones
+- After a debugging session: "Create a note summarizing what we found and what still needs investigation"
+
+**Daily standups and reviews**
+- "Summarize everything tagged `person_daily` from this month" — Claude reads notes filtered by the `time_2026_03` label and drafts a summary
+- "What did I work on last week?" — Claude searches notes by time label and lists completed items
+- "Create a checklist for tomorrow's code review" — Claude creates a list note with items you specify
+
+**Project context across tools**
+- Keep notes act as a persistent scratchpad that Claude can read at the start of a session: "Catch me up on the `project_google-keep-mcp` notes"
+- "Archive all notes tagged `project_harp` that are marked done" — bulk operations across a project's notes
+
 ## Notes
 
 - `delete_note` moves notes to trash (Google Keep does not expose hard deletion via API)
