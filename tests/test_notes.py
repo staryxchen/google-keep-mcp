@@ -75,3 +75,26 @@ def test_pin_note(mock_keep, real_note):
     keep.sync()
     assert real_note.pinned is True
     mock_keep.sync.assert_called_once()
+
+
+def test_untrash_note(mock_keep, real_note):
+    real_note.trash()
+    assert real_note.trashed is True
+    mock_keep.get.return_value = real_note
+    from google_keep_mcp._state import get_keep
+    keep = get_keep()
+    note = keep.get(real_note.id)
+    note.untrash()
+    keep.sync()
+    assert real_note.trashed is False
+    mock_keep.sync.assert_called_once()
+
+
+def test_untrash_note_not_in_trash(mock_keep, real_note):
+    assert real_note.trashed is False
+    mock_keep.get.return_value = real_note
+    from google_keep_mcp._state import get_keep
+    keep = get_keep()
+    note = keep.get(real_note.id)
+    # Should not be trashed already
+    assert not note.trashed

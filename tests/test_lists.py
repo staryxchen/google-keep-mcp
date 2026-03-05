@@ -45,3 +45,29 @@ def test_list_to_model(real_list):
     assert result.type == "list"
     assert result.items is not None
     assert len(result.items) == 2
+
+
+def test_sort_list_items(mock_keep, real_list):
+    real_list.add("Apples", False)
+    mock_keep.get.return_value = real_list
+    from google_keep_mcp._state import get_keep
+    keep = get_keep()
+    lst = keep.get(real_list.id)
+    lst.sort_items()
+    keep.sync()
+    texts = [li.text for li in lst.items]
+    assert texts == sorted(texts)
+    mock_keep.sync.assert_called_once()
+
+
+def test_sort_list_items_reverse(mock_keep, real_list):
+    real_list.add("Apples", False)
+    mock_keep.get.return_value = real_list
+    from google_keep_mcp._state import get_keep
+    keep = get_keep()
+    lst = keep.get(real_list.id)
+    lst.sort_items(reverse=True)
+    keep.sync()
+    texts = [li.text for li in lst.items]
+    assert texts == sorted(texts, reverse=True)
+    mock_keep.sync.assert_called_once()

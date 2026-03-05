@@ -68,3 +68,43 @@ def register(mcp: FastMCP) -> None:
             success=True,
             message=f"Label '{label_name}' added to note {note_id}",
         )
+
+    @mcp.tool()
+    def remove_label_from_note(note_id: str, label_name: str) -> ToolResult:
+        """Remove a label from a note by label name.
+
+        Args:
+            note_id: The note ID to remove the label from.
+            label_name: The name of the label to remove (case-insensitive).
+        """
+        keep = get_keep()
+        note = keep.get(note_id)
+        if note is None:
+            return ToolResult(success=False, message=f"Note {note_id} not found")
+        label = keep.findLabel(label_name)
+        if label is None:
+            return ToolResult(
+                success=False,
+                message=f"Label '{label_name}' not found",
+            )
+        note.labels.remove(label)
+        keep.sync()
+        return ToolResult(
+            success=True,
+            message=f"Label '{label_name}' removed from note {note_id}",
+        )
+
+    @mcp.tool()
+    def delete_label(label_name: str) -> ToolResult:
+        """Permanently delete a label from the account and remove it from all notes.
+
+        Args:
+            label_name: The name of the label to delete.
+        """
+        keep = get_keep()
+        label = keep.findLabel(label_name)
+        if label is None:
+            return ToolResult(success=False, message=f"Label '{label_name}' not found")
+        keep.deleteLabel(label.id)
+        keep.sync()
+        return ToolResult(success=True, message=f"Label '{label_name}' deleted")

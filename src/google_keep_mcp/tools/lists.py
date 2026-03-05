@@ -94,3 +94,26 @@ def register(mcp: FastMCP) -> None:
             message=f"List {note_id} updated",
             note=note_to_model(note),
         )
+
+    @mcp.tool()
+    def sort_list_items(note_id: str, reverse: bool = False) -> ToolResult:
+        """Sort checklist items alphabetically.
+
+        Args:
+            note_id: The list note ID.
+            reverse: If True, sort in reverse (Z→A). Default False (A→Z).
+        """
+        keep = get_keep()
+        note = keep.get(note_id)
+        if note is None:
+            return ToolResult(success=False, message=f"Note {note_id} not found")
+        if not isinstance(note, gkeepapi.node.List):
+            return ToolResult(success=False, message=f"Note {note_id} is not a list")
+        note.sort_items(reverse=reverse)
+        keep.sync()
+        order = "Z→A" if reverse else "A→Z"
+        return ToolResult(
+            success=True,
+            message=f"List {note_id} items sorted {order}",
+            note=note_to_model(note),
+        )

@@ -78,3 +78,49 @@ def test_add_label_note_not_found(mock_keep):
     keep = get_keep()
     note = keep.get("missing_id")
     assert note is None
+
+
+def test_remove_label_from_note(mock_keep, real_note):
+    import gkeepapi.node as gnode
+    label = gnode.Label()
+    label.name = "Work"
+    real_note.labels.add(label)
+    assert any(l.name == "Work" for l in real_note.labels.all())
+
+    mock_keep.get.return_value = real_note
+    mock_keep.findLabel.return_value = label
+
+    from google_keep_mcp._state import get_keep
+    keep = get_keep()
+    note = keep.get(real_note.id)
+    lbl = keep.findLabel("Work")
+    note.labels.remove(lbl)
+    keep.sync()
+
+    assert not any(l.name == "Work" for l in real_note.labels.all())
+    mock_keep.sync.assert_called_once()
+
+
+def test_delete_label(mock_keep):
+    from unittest.mock import MagicMock
+    label = MagicMock()
+    label.id = "lbl_work"
+    label.name = "Work"
+    mock_keep.findLabel.return_value = label
+
+    from google_keep_mcp._state import get_keep
+    keep = get_keep()
+    lbl = keep.findLabel("Work")
+    keep.deleteLabel(lbl.id)
+    keep.sync()
+
+    mock_keep.deleteLabel.assert_called_once_with("lbl_work")
+    mock_keep.sync.assert_called_once()
+
+
+def test_delete_label_not_found(mock_keep):
+    mock_keep.findLabel.return_value = None
+    from google_keep_mcp._state import get_keep
+    keep = get_keep()
+    lbl = keep.findLabel("NonExistent")
+    assert lbl is None

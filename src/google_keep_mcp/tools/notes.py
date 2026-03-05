@@ -144,6 +144,23 @@ def register(mcp: FastMCP) -> None:
         return ToolResult(success=True, message=f"Note {note_id} moved to trash")
 
     @mcp.tool()
+    def untrash_note(note_id: str) -> ToolResult:
+        """Restore a note from trash.
+
+        Args:
+            note_id: The note ID to restore.
+        """
+        keep = get_keep()
+        note = keep.get(note_id)
+        if note is None:
+            return ToolResult(success=False, message=f"Note {note_id} not found")
+        if not note.trashed:
+            return ToolResult(success=False, message=f"Note {note_id} is not in trash")
+        note.untrash()
+        keep.sync()
+        return ToolResult(success=True, message=f"Note {note_id} restored from trash", note=note_to_model(note))
+
+    @mcp.tool()
     def archive_note(note_id: str, archived: bool = True) -> ToolResult:
         """Archive or unarchive a note.
 
