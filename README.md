@@ -16,7 +16,8 @@ Copy `.claude/commands/` to `~/.claude/commands/` to make these available global
 | `/todo` | `/todo <task description>` | Create a new task note with `state_todo` label |
 | `/doing` | `/doing <note_id>` | Transition a task to `state_doing` |
 | `/done` | `/done <note_id>` | Archive a task as completed |
-| `/block` | `/block <note_id> <reason>` | Mark a task as blocked, append reason to note body |
+| `/block` | `/block <note_id> <reason>` | Mark a task as self-blocked, append reason to note body |
+| `/waiting` | `/waiting <note_id> <who/why>` | Mark a task as waiting on someone else, append context to note body |
 | `/capture` | `/capture <content>` | Save a thought or decision to Keep |
 | `/standup` | `/standup` | Generate a standup summary from current tasks |
 | `/catchup` | `/catchup <project>` | Summarize all notes for a project by status |
@@ -25,7 +26,7 @@ Copy `.claude/commands/` to `~/.claude/commands/` to make these available global
 
 The commands rely on a label schema defined in `~/.claude/CLAUDE.md`:
 
-- **`state_*`** — task state, mutually exclusive: `state_todo`, `state_doing`, `state_blocking`
+- **`state_*`** — task state, mutually exclusive: `state_todo`, `state_doing`, `state_blocking`, `state_waiting`
 - **`project_*`** — project the note belongs to (one note can have multiple)
 - **`time_YYYY_MM`** — month the note was created, applied automatically
 
@@ -34,7 +35,8 @@ The commands rely on a label schema defined in `~/.claude/CLAUDE.md`:
 ```
 /next                                    # see what's pending
 /doing 1a2b3c4d5e6f                      # start a task
-/block 1a2b3c4d5e6f waiting for API key  # hit a blocker
+/block 1a2b3c4d5e6f can't proceed, env broken  # self-blocked
+/waiting 1a2b3c4d5e6f renchu reviewing the PR  # handed off
 /capture decided to use SSE over polling # save a decision
 /done 1a2b3c4d5e6f                       # complete a task
 /standup                                 # wrap up the day
