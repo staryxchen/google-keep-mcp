@@ -12,15 +12,16 @@ Copy `.claude/commands/` to `~/.claude/commands/` to make these available global
 
 | Command | Usage | Description |
 |---------|-------|-------------|
-| `/next` | `/next` | List all `state_todo` notes grouped by project |
+| `/next` | `/next` | List all active tasks (doing, blocking, waiting, todo) grouped by project |
 | `/todo` | `/todo <task description>` | Create a new task note with `state_todo` label |
 | `/doing` | `/doing <note_id>` | Transition a task to `state_doing` |
-| `/done` | `/done <note_id>` | Archive a task as completed |
+| `/progress` | `/progress <note_id> <update>` | Append a timestamped progress entry to a task note |
+| `/done` | `/done <note_id> [completion note]` | Archive a task as completed, with optional completion note |
 | `/block` | `/block <note_id> <reason>` | Mark a task as self-blocked, append reason to note body |
 | `/waiting` | `/waiting <note_id> <who/why>` | Mark a task as waiting on someone else, append context to note body |
-| `/capture` | `/capture <content>` | Save a thought or decision to Keep |
+| `/capture` | `/capture <content>` | Save a thought, decision, or finding to Keep |
 | `/standup` | `/standup` | Generate a standup summary from current tasks |
-| `/catchup` | `/catchup <project>` | Summarize all notes for a project by status |
+| `/catchup` | `/catchup <project> [--last <N>d/w/m\|--since <date>]` | Summarize project notes by status; add time range for weekly report format |
 
 ### Label Conventions
 
@@ -33,18 +34,20 @@ The commands rely on a label schema defined in `~/.claude/CLAUDE.md`:
 ### Typical Session
 
 ```
-/next                                    # see what's pending
+/next                                    # see all active tasks
 /doing 1a2b3c4d5e6f                      # start a task
+/progress 1a2b3c4d5e6f initial spike done, moving to impl  # log progress
 /block 1a2b3c4d5e6f can't proceed, env broken  # self-blocked
 /waiting 1a2b3c4d5e6f alice reviewing the PR    # handed off
 /capture decided to use SSE over polling # save a decision
-/done 1a2b3c4d5e6f                       # complete a task
+/done 1a2b3c4d5e6f complexity too high, shelved  # complete with note
 /standup                                 # wrap up the day
+/catchup harp --last 7d                  # weekly report for a project
 ```
 
 ## Features
 
-- **17 MCP tools** covering notes, checklists, labels, search, and note properties
+- **18 MCP tools** covering notes, checklists, labels, search, note properties, and sync
 - Token-based authentication (no deprecated password login)
 - Optional state caching for faster restarts
 - Structured Pydantic output models for all tools
@@ -187,6 +190,7 @@ mcp dev src/google_keep_mcp/server.py
 | `add_label_to_note` | Apply a label to a note |
 | `remove_label_from_note` | Remove a label from a note |
 | `delete_label` | Permanently delete a label from the account |
+| `sync` | Sync with Google Keep servers to fetch the latest changes |
 
 ## Development
 
@@ -202,4 +206,5 @@ pytest tests/ -v
 
 - `delete_note` moves notes to trash (Google Keep does not expose hard deletion via API)
 - All mutations call `keep.sync()` automatically to persist changes to Google's servers
-- The server performs a full sync on startup; subsequent mutations use incremental sync
+- On startup with a cache file, the server performs an incremental sync; without a cache file, a full sync is performed
+- Use the `sync` tool (or `/next`, `/catchup` which call it automatically) to pull in changes made from other clients (mobile app, web)
