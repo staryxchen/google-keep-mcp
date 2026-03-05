@@ -36,7 +36,7 @@ The commands rely on a label schema defined in `~/.claude/CLAUDE.md`:
 /next                                    # see what's pending
 /doing 1a2b3c4d5e6f                      # start a task
 /block 1a2b3c4d5e6f can't proceed, env broken  # self-blocked
-/waiting 1a2b3c4d5e6f renchu reviewing the PR  # handed off
+/waiting 1a2b3c4d5e6f alice reviewing the PR    # handed off
 /capture decided to use SSE over polling # save a decision
 /done 1a2b3c4d5e6f                       # complete a task
 /standup                                 # wrap up the day
