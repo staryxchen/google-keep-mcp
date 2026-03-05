@@ -5,12 +5,17 @@
 请执行以下步骤：
 1. 用 `list_notes` 查询标签为 `state_doing` 的笔记
 2. 用 `list_notes` 查询标签为 `state_blocking` 的笔记
-3. 用 `list_notes` 查询标签为 `state_todo` 的笔记
-4. 按以下格式整理并输出站会内容：
+3. 用 `list_notes` 查询标签为 `state_waiting` 的笔记
+4. 用 `list_notes` 查询标签为 `state_todo` 的笔记
+5. 按以下格式整理并输出站会内容：
 
 **今天计划**
 - （列出 state_doing 中的进行中任务）
 - （列出 state_todo 中优先级最高的待办）
+
+**等待反馈**
+- （列出 state_waiting 中的任务及正文中记录的等待对象）
+- 无则填写「无」
 
 **阻塞/风险**
 - （列出 state_blocking 中的所有阻塞项及正文中记录的阻塞原因）
