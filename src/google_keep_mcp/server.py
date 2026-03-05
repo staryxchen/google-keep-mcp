@@ -71,12 +71,13 @@ mcp = FastMCP(
 )
 
 # Import tool modules after mcp is defined to avoid circular imports
-from .tools import notes, lists, search, labels  # noqa: E402
+from .tools import notes, lists, search, labels, sync  # noqa: E402
 
 notes.register(mcp)
 lists.register(mcp)
 search.register(mcp)
 labels.register(mcp)
+sync.register(mcp)
 
 
 def main() -> None:

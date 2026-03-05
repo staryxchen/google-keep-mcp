@@ -14,9 +14,10 @@
    - 若有 --last Nd/Nw/Nm，计算起始时间 = 今天 - N天/周/月
    - 若有 --since YYYY-MM-DD，起始时间 = 该日期 00:00:00
    - 无时间参数则不做时间过滤
-2. 用 `list_notes` 查询标签为 `project_<project>` 的所有笔记（不含归档）
-3. 用 `list_notes` 查询标签为 `project_<project>` 的已归档笔记（archived=true）
-4. 若有时间过滤，对步骤 2、3 的结果按 `updated` 时间筛选，只保留 >= 起始时间的笔记
+2. 调用 `sync` 获取最新数据
+3. 用 `list_notes` 查询标签为 `project_<project>` 的所有笔记（不含归档）
+4. 用 `list_notes` 查询标签为 `project_<project>` 的已归档笔记（archived=true）
+5. 若有时间过滤，对步骤 3、4 的结果按 `updated` 时间筛选，只保留 >= 起始时间的笔记
 
 **【无时间参数时】按状态分组展示：**
 
