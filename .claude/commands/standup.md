@@ -1,6 +1,6 @@
 生成今日站会内容，汇总昨天完成、今天计划和当前阻塞。
 
-标签含义遵循 CLAUDE.md「Google Keep 标签体系」中的规定。
+标签含义遵循「全局 Google Keep 标签体系规范」中的规定。
 
 请执行以下步骤：
 1. 用 `list_notes` 查询标签为 `state_doing` 的笔记

@@ -2,7 +2,7 @@
 
 用法：/block <note_id> <阻塞原因>
 
-状态流转规则遵循 CLAUDE.md「Google Keep 标签体系 → state 标签」中的规定（互斥、先加后移）。
+状态流转规则遵循「全局 Google Keep 标签体系规范 → state 标签」中的规定（互斥、先加后移）。
 
 请执行以下步骤：
 1. 解析 $ARGUMENTS：第一个空格前为 note_id，其余为阻塞原因

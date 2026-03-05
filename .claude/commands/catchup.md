@@ -1,9 +1,9 @@
 快速了解某个项目的所有笔记，按状态汇总。
 
 用法：/catchup <project>
-参数为项目名，对应 CLAUDE.md project 标签去掉 `project_` 前缀（如 `google-keep-mcp`、`mooncake`、`harp`、`llm`、`others`）。
+参数为项目名，对应 全局 Google Keep 标签体系规范中的 project 标签去掉 `project_` 前缀（如 `google-keep-mcp`、`mooncake`、`harp`、`llm`、`others`）。
 
-标签含义遵循 CLAUDE.md「Google Keep 标签体系」中的规定。
+标签含义遵循「全局 Google Keep 标签体系规范」中的规定。
 
 请执行以下步骤：
 1. 用 `list_notes` 查询标签为 `project_$ARGUMENTS` 的所有笔记（不含归档）

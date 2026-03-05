@@ -2,7 +2,7 @@
 
 用法：/doing <note_id>
 
-状态流转规则遵循 CLAUDE.md「Google Keep 标签体系 → state 标签」中的规定（互斥、先加后移）。
+状态流转规则遵循「全局 Google Keep 标签体系规范 → state 标签」中的规定（互斥、先加后移）。
 
 请执行以下步骤：
 1. 用 `get_note` 获取笔记 $ARGUMENTS 的当前信息
