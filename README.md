@@ -65,7 +65,7 @@ Google has restricted direct password-based authentication, so obtaining a maste
 1. Open `https://accounts.google.com/EmbeddedSetup` in your browser and log in fully (including 2-step verification if enabled)
 2. After login, open DevTools → **Application** (Chrome) or **Storage** (Firefox) → Cookies → `accounts.google.com`
 3. Find the cookie named **`oauth_token`** (value starts with `oauth2_4/` or `oauth2_1/`) and copy it
-4. Run the following to exchange it for a master token:
+4. Ensure you have gpsoauth 2.0.0+ installed (`pip install --upgrade gpsoauth`), then run:
 
 ```bash
 python3 -c "
