@@ -20,14 +20,8 @@
 ## 执行步骤
 
 1. 调用 `sync` 获取最新数据
-2. 并行获取所有活跃笔记：
-   - `list_notes(label=state_todo)`
-   - `list_notes(label=state_doing)`
-   - `list_notes(label=state_blocking)`
-   - `list_notes(label=state_waiting)`
-   - `list_notes(label=time_2026_02)`（及其他已有 time 标签）
-   - 以及无 state/time 标签的笔记（通过 `list_notes` 全量获取后过滤）
-3. 合并去重，过滤掉已归档、已删除、有 `person_daily` 标签的笔记
+2. 调用 `list_notes`（不带任何过滤参数）获取所有未归档笔记
+3. 过滤掉已删除、有 `person_daily` 标签的笔记
 4. 按筛选规则找出不符合规范的笔记，展示总数：
    `共发现 N 条不符合规范的笔记，逐条整理中...`
 5. 逐条处理，每条笔记展示：
