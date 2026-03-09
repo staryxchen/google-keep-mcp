@@ -1,6 +1,6 @@
 # Google Keep MCP Server
 
-An MCP (Model Context Protocol) server that wraps [gkeepapi](https://github.com/kiwiz/gkeepapi) to give AI assistants structured access to Google Keep notes, lists, and labels.
+A [Model Context Protocol](https://modelcontextprotocol.io/) server that turns Google Keep into a **note-free personal task and knowledge system** for AI assistants. Rather than writing notes manually, you interact through a set of slash commands (`/todo`, `/doing`, `/done`, `/capture`, `/standup`, …) that handle all the bookkeeping — creating notes, transitioning states, appending progress logs, archiving completed work — so you stay focused on the actual work. The MCP layer wraps [gkeepapi](https://github.com/kiwiz/gkeepapi) for structured access to notes, lists, and labels, while the commands and label conventions on top form a complete, opinionated workflow.
 
 ## Using with Claude Code
 
@@ -12,7 +12,7 @@ Copy `.claude/commands/` to `~/.claude/commands/` to make these available global
 
 | Command | Usage | Description |
 |---------|-------|-------------|
-| `/next` | `/next` | List all active tasks (doing, blocking, waiting, todo) grouped by project |
+| `/next` | `/next [project]` | List all active tasks grouped by project; optionally filter to a single project (e.g. `/next harp`) |
 | `/todo` | `/todo <task description>` | Create a new task note with `state_todo` label |
 | `/doing` | `/doing <note_id>` | Transition a task to `state_doing` |
 | `/progress` | `/progress <note_id> <update>` | Append a timestamped progress entry to a task note |
@@ -22,6 +22,8 @@ Copy `.claude/commands/` to `~/.claude/commands/` to make these available global
 | `/capture` | `/capture <content>` | Save a thought, decision, or finding to Keep |
 | `/standup` | `/standup` | Generate a standup summary from current tasks |
 | `/catchup` | `/catchup <project> [--last <N>d/w/m\|--since <date>]` | Summarize project notes by status; add time range for weekly report format |
+| `/explore` | `/explore [topic]` | Browse the knowledge base by topic; omit topic for a count overview |
+| `/tidy` | `/tidy` | Scan all active notes for label/title violations and interactively fix them |
 
 ### Label Conventions
 
@@ -30,11 +32,13 @@ The commands rely on a label schema defined in `~/.claude/CLAUDE.md`:
 - **`state_*`** — task state, mutually exclusive: `state_todo`, `state_doing`, `state_blocking`, `state_waiting`
 - **`project_*`** — project the note belongs to (one note can have multiple)
 - **`time_YYYY_MM`** — month the note was created, applied automatically
+- **`topic_*`** — knowledge domain for `/capture` notes: `topic_infra`, `topic_llm`, `topic_useful-tools`, `topic_career`, `topic_finance`
 
 ### Typical Session
 
 ```
 /next                                    # see all active tasks
+/next q-trade                            # filter to a single project
 /doing 1a2b3c4d5e6f                      # start a task
 /progress 1a2b3c4d5e6f initial spike done, moving to impl  # log progress
 /block 1a2b3c4d5e6f can't proceed, env broken  # self-blocked
@@ -43,6 +47,8 @@ The commands rely on a label schema defined in `~/.claude/CLAUDE.md`:
 /done 1a2b3c4d5e6f complexity too high, shelved  # complete with note
 /standup                                 # wrap up the day
 /catchup harp --last 7d                  # weekly report for a project
+/explore llm                             # browse knowledge base by topic
+/tidy                                    # fix any notes with missing labels
 ```
 
 ## Features
