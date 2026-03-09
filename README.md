@@ -12,7 +12,7 @@ Copy `.claude/commands/` to `~/.claude/commands/` to make these available global
 
 | Command | Usage | Description |
 |---------|-------|-------------|
-| `/next` | `/next [project]` | List all active tasks grouped by project; optionally filter to a single project (e.g. `/next harp`) |
+| `/next` | `/next [project]` | List all active tasks grouped by project; optionally filter to a single project (e.g. `/next <project>`) |
 | `/todo` | `/todo <task description>` | Create a new task note with `state_todo` label |
 | `/doing` | `/doing <note_id>` | Transition a task to `state_doing` |
 | `/progress` | `/progress <note_id> <update>` | Append a timestamped progress entry to a task note |
@@ -32,13 +32,13 @@ The commands rely on a label schema defined in `~/.claude/CLAUDE.md`:
 - **`state_*`** — task state, mutually exclusive: `state_todo`, `state_doing`, `state_blocking`, `state_waiting`
 - **`project_*`** — project the note belongs to (one note can have multiple)
 - **`time_YYYY_MM`** — month the note was created, applied automatically
-- **`topic_*`** — knowledge domain for `/capture` notes: `topic_infra`, `topic_llm`, `topic_useful-tools`, `topic_career`, `topic_finance`
+- **`topic_*`** — knowledge domain for `/capture` notes (e.g. infrastructure, LLM, tools, career)
 
 ### Typical Session
 
 ```
 /next                                    # see all active tasks
-/next q-trade                            # filter to a single project
+/next <project>                          # filter to a single project
 /doing 1a2b3c4d5e6f                      # start a task
 /progress 1a2b3c4d5e6f initial spike done, moving to impl  # log progress
 /block 1a2b3c4d5e6f can't proceed, env broken  # self-blocked
@@ -46,8 +46,8 @@ The commands rely on a label schema defined in `~/.claude/CLAUDE.md`:
 /capture decided to use SSE over polling # save a decision
 /done 1a2b3c4d5e6f complexity too high, shelved  # complete with note
 /standup                                 # wrap up the day
-/catchup harp --last 7d                  # weekly report for a project
-/explore llm                             # browse knowledge base by topic
+/catchup <project> --last 7d             # weekly report for a project
+/explore <topic>                         # browse knowledge base by topic
 /tidy                                    # fix any notes with missing labels
 ```
 
