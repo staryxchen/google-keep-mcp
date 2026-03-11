@@ -8,15 +8,15 @@ With this MCP server and the included Claude Code slash commands, you get a ligh
 
 ### Slash Commands
 
-Copy `.claude/commands/` to `~/.claude/commands/` to make these available globally, and add the label conventions from `~/.claude/CLAUDE.md` (see below).
+Copy `.claude/commands/` to `~/.claude/commands/` to make these available globally, and add the label conventions to your global `CLAUDE.md` (see below).
 
 | Command | Usage | Description |
 |---------|-------|-------------|
 | `/next` | `/next [project]` | List all active tasks grouped by project; optionally filter to a single project (e.g. `/next <project>`) |
 | `/todo` | `/todo <task description>` | Create a new task note with `state_todo` label |
 | `/doing` | `/doing <note_id>` | Transition a task to `state_doing` |
-| `/progress` | `/progress <note_id> <update>` | Append a timestamped progress entry to a task note |
-| `/done` | `/done <note_id> [completion note]` | Archive a task as completed, with optional completion note |
+| `/progress` | `/progress <note_id> [update]` | Append a timestamped progress entry; omit update to auto-generate from conversation history and `git log` |
+| `/done` | `/done [note_id] [completion note]` | Archive a task as completed; omit note_id to interactively pick from doing tasks with auto-generated summary |
 | `/block` | `/block <note_id> <reason>` | Mark a task as self-blocked, append reason to note body |
 | `/waiting` | `/waiting <note_id> <who/why>` | Mark a task as waiting on someone else, append context to note body |
 | `/capture` | `/capture <content>` | Save a thought, decision, or finding to Keep |

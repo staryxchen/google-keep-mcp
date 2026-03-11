@@ -59,6 +59,10 @@ Each tool domain has its own module under `src/google_keep_mcp/tools/`. Each mod
 | `KEEP_CACHE_FILE` | No | Path to JSON cache; enables incremental sync on restart |
 | `LOG_LEVEL` | No | `DEBUG`/`INFO`/`WARNING`/`ERROR` (default `INFO`) |
 
+## Skill commands sync rule
+
+The project maintains custom skill commands under `.claude/commands/`. When any file in that directory is added, removed, or modified, **immediately sync the changes to `~/.claude/commands/`** (global commands directory) by copying the updated files. This ensures the commands are available across all projects.
+
 ## Git conventions
 
 All commits include:
