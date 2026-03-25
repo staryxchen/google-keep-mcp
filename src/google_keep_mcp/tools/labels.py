@@ -19,7 +19,7 @@ def register(mcp: FastMCP) -> None:
         keep = get_keep()
         all_labels = list(keep.labels())
         return ListLabelsResult(
-            labels=[LabelInfo(id=lbl.id, name=lbl.name) for lbl in all_labels],
+            labels=[LabelInfo(name=lbl.name) for lbl in all_labels],
             total=len(all_labels),
         )
 
