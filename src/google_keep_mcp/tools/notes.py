@@ -32,13 +32,13 @@ def register(mcp: FastMCP) -> None:
             try:
                 colors = [gkeepapi.node.ColorValue(color.upper())]
             except ValueError:
-                return ListNotesResult(notes=[], total=0)
+                return ListNotesResult(notes=[])
 
         label_obj = None
         if label is not None:
             label_obj = keep.findLabel(label)
             if label_obj is None:
-                return ListNotesResult(notes=[], total=0)
+                return ListNotesResult(notes=[])
 
         results = list(keep.find(
             archived=archived,
@@ -47,10 +47,7 @@ def register(mcp: FastMCP) -> None:
             colors=colors,
             labels=[label_obj] if label_obj else None,
         ))
-        return ListNotesResult(
-            notes=[note_to_model(n) for n in results],
-            total=len(results),
-        )
+        return ListNotesResult(notes=[note_to_model(n) for n in results])
 
     @mcp.tool()
     def get_note(note_id: str) -> NoteInfo | None:
@@ -63,7 +60,7 @@ def register(mcp: FastMCP) -> None:
         note = keep.get(note_id)
         if note is None:
             return None
-        return note_to_model(note)
+        return note_to_model(note, full=True)
 
     @mcp.tool()
     def create_note(title: str = "", text: str = "") -> ToolResult:
@@ -79,7 +76,6 @@ def register(mcp: FastMCP) -> None:
         return ToolResult(
             success=True,
             message=f"Note created with ID {note.id}",
-            note=note_to_model(note),
         )
 
     @mcp.tool()
@@ -125,7 +121,6 @@ def register(mcp: FastMCP) -> None:
         return ToolResult(
             success=True,
             message=f"Note {note_id} updated",
-            note=note_to_model(note),
         )
 
     @mcp.tool()
@@ -158,7 +153,7 @@ def register(mcp: FastMCP) -> None:
             return ToolResult(success=False, message=f"Note {note_id} is not in trash")
         note.untrash()
         keep.sync()
-        return ToolResult(success=True, message=f"Note {note_id} restored from trash", note=note_to_model(note))
+        return ToolResult(success=True, message=f"Note {note_id} restored from trash")
 
     @mcp.tool()
     def archive_note(note_id: str, archived: bool = True) -> ToolResult:
@@ -175,7 +170,7 @@ def register(mcp: FastMCP) -> None:
         note.archived = archived
         keep.sync()
         action = "archived" if archived else "unarchived"
-        return ToolResult(success=True, message=f"Note {note_id} {action}", note=note_to_model(note))
+        return ToolResult(success=True, message=f"Note {note_id} {action}")
 
     @mcp.tool()
     def pin_note(note_id: str, pinned: bool = True) -> ToolResult:
@@ -192,4 +187,4 @@ def register(mcp: FastMCP) -> None:
         note.pinned = pinned
         keep.sync()
         action = "pinned" if pinned else "unpinned"
-        return ToolResult(success=True, message=f"Note {note_id} {action}", note=note_to_model(note))
+        return ToolResult(success=True, message=f"Note {note_id} {action}")
