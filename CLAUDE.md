@@ -62,11 +62,3 @@ Each tool domain has its own module under `src/google_keep_mcp/tools/`. Each mod
 ## Skill commands sync rule
 
 The project maintains custom skill commands under `.claude/commands/`. When any file in that directory is added, removed, or modified, **immediately sync the changes to `~/.claude/commands/`** (global commands directory) by copying the updated files. This ensures the commands are available across all projects.
-
-## Git conventions
-
-All commits include:
-```
-Signed-off-by: staryxchen <staryxchen@tencent.com>
-Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
-```
