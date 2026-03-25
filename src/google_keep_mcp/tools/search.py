@@ -24,7 +24,7 @@ def register(mcp: FastMCP) -> None:
         keep = get_keep()
         results = list(keep.find(
             query=query,
-            archived=True if include_archived else False,
+            archived=include_archived,
             trashed=include_trashed,
         ))
         return ListNotesResult(
