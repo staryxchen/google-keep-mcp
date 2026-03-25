@@ -98,3 +98,24 @@ def test_untrash_note_not_in_trash(mock_keep, real_note):
     note = keep.get(real_note.id)
     # Should not be trashed already
     assert not note.trashed
+
+
+def test_label_info_has_no_id():
+    from google_keep_mcp.models import LabelInfo
+    lbl = LabelInfo(name="Work")
+    assert lbl.name == "Work"
+    assert not hasattr(lbl, "id")
+
+
+def test_tool_result_has_no_note_field():
+    from google_keep_mcp.models import ToolResult
+    result = ToolResult(success=True, message="ok")
+    assert result.success is True
+    assert not hasattr(result, "note")
+
+
+def test_list_notes_result_has_no_total():
+    from google_keep_mcp.models import ListNotesResult
+    result = ListNotesResult(notes=[])
+    assert result.notes == []
+    assert not hasattr(result, "total")
