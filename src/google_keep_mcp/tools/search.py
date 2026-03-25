@@ -29,5 +29,4 @@ def register(mcp: FastMCP) -> None:
         ))
         return ListNotesResult(
             notes=[note_to_model(n) for n in results],
-            total=len(results),
         )

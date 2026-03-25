@@ -35,7 +35,6 @@ def register(mcp: FastMCP) -> None:
         return ToolResult(
             success=True,
             message=f"List created with ID {node.id}",
-            note=note_to_model(node),
         )
 
     @mcp.tool()
@@ -92,7 +91,6 @@ def register(mcp: FastMCP) -> None:
         return ToolResult(
             success=True,
             message=f"List {note_id} updated",
-            note=note_to_model(note),
         )
 
     @mcp.tool()
@@ -115,5 +113,4 @@ def register(mcp: FastMCP) -> None:
         return ToolResult(
             success=True,
             message=f"List {note_id} items sorted {order}",
-            note=note_to_model(note),
         )
