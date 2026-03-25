@@ -5,8 +5,6 @@ from mcp.server.fastmcp import FastMCP
 
 from ..models import ToolResult
 from .._state import get_keep
-from ._helpers import note_to_model
-
 
 def register(mcp: FastMCP) -> None:
 
