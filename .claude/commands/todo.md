@@ -10,6 +10,6 @@
    - 判断工作类型，从以下类型中选最贴切的一个：`feature`、`bugfix`、`review`、`refactor`、`docs`、`chore`、`decision`、`note`
    - 提炼一个简洁的中文摘要（10 字以内，概括核心要点）
    - 标题格式：`[类型] 摘要`，例如 `[bugfix] 修复 CI force push 检查失败`
-3. 用 `create_note` 创建一条新笔记，标题为上一步生成的标题，正文为空
+3. 用 `create_note` 创建一条新笔记，标题为上一步生成的标题，正文为空。**必须使用 `create_note`，严禁使用 `create_list`**——任务笔记永远是文本笔记，不是清单
 4. 按规范打上 state_todo 标签、project 标签和当前月份 time 标签（如 time 标签不存在先创建）
 5. 确认操作结果，显示笔记 ID 和标题，提示可用 /doing 开始处理
