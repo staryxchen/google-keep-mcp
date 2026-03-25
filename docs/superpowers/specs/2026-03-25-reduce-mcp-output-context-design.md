@@ -129,8 +129,53 @@ def note_to_model(note: gkeepapi.node.TopLevelNode, full: bool = False) -> NoteI
 | `search_notes` | `False` (default) | Bulk list, strip low-frequency fields |
 | All mutations (create, update, archive, pin, trash, etc.) | — | Remove `note=note_to_model(note)` entirely |
 
+### `tools/labels.py` — `list_labels` call site
+
+`list_labels` constructs `LabelInfo` directly (outside `note_to_model`):
+
+```python
+# Before:
+labels=[LabelInfo(id=lbl.id, name=lbl.name) for lbl in all_labels]
+# After:
+labels=[LabelInfo(name=lbl.name) for lbl in all_labels]
+```
+
+This call site must be updated alongside the `LabelInfo` model change, or a Pydantic validation error will occur at runtime.
+
+### `ListNotesResult` call sites in `notes.py` and `search.py`
+
+Four explicit call sites pass `total=` and must be updated after `total` is removed from the model:
+
+- `notes.py` line 35: `ListNotesResult(notes=[], total=0)` → `ListNotesResult(notes=[])`
+- `notes.py` line 41: `ListNotesResult(notes=[], total=0)` → `ListNotesResult(notes=[])`
+- `notes.py` line 50–53: `ListNotesResult(notes=[...], total=len(results))` → `ListNotesResult(notes=[...])`
+- `search.py`: `ListNotesResult(notes=[...], total=len(results))` → `ListNotesResult(notes=[...])`
+
+### `ListLabelsResult.total` — explicitly out of scope
+
+`labels.py` defines `ListLabelsResult` with a `total` field exhibiting the same redundancy. Removing it is **out of scope** for this change to keep the diff focused. It can be addressed in a follow-up.
+
 ### Serialization
-Configure `NoteInfo` with `model_config = ConfigDict(exclude_none=True)` so that `None` fields are omitted from all JSON output without requiring per-call `model_dump(exclude_none=True)`.
+
+FastMCP serializes tool return values by calling `model_dump(mode="json", by_alias=True)` (confirmed in `mcp/server/fastmcp/utilities/func_metadata.py` line 129). It does **not** pass `exclude_none=True`, so `ConfigDict(exclude_none=True)` — which is a `model_dump` call-site option, not a valid `ConfigDict` key in Pydantic v2 — would have no effect.
+
+The correct approach is to override serialization on `NoteInfo` using Pydantic v2's `@model_serializer`:
+
+```python
+from pydantic import BaseModel, model_serializer
+
+class NoteInfo(BaseModel):
+    # ... fields ...
+
+    @model_serializer(mode="wrap")
+    def _serialize(self, handler):
+        data = handler(self)
+        return {k: v for k, v in data.items() if v is not None}
+```
+
+This ensures `None` fields are stripped regardless of how `model_dump` is called, including FastMCP's internal call. **Note:** `items` for regular (non-list) notes will also be `None` and thus stripped — this is intentional and correct, since `items` is only meaningful for list-type notes.
+
+**Important:** Add `from pydantic import model_serializer` to `models.py` imports (currently only `BaseModel` is imported).
 
 ---
 
@@ -141,6 +186,7 @@ Configure `NoteInfo` with `model_config = ConfigDict(exclude_none=True)` so that
 - **`ToolResult.note` assertions**: Remove all `result.note` checks; only assert `result.success` and `result.message`
 - **`ListNotesResult.total` assertions**: Replace `result.total == N` with `len(result.notes) == N`
 - **`LabelInfo.id` assertions**: Remove any `label.id` checks; assert only `label.name`
+- **`test_note_to_model_color`** in `tests/test_notes.py`: This test calls `note_to_model(real_note)` without `full=True` and asserts `result.color == "RED"`. After the change, `color` will be `None` in slim mode. Update to `note_to_model(real_note, full=True)` to test full-mode behavior explicitly.
 
 ### New tests to add
 
