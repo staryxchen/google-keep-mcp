@@ -130,22 +130,17 @@ def test_note_to_model_slim_omits_detail_fields(real_note):
 
 
 def test_note_to_model_full_includes_detail_fields(real_note):
-    """Full mode: server_id, url, color are populated."""
-    import gkeepapi.node as gnode
+    """Full mode: color and url are populated from the node.
+
+    Note: server_id cannot be verified here because a locally-created
+    (never-synced) gkeepapi node has server_id=None by design.
+    The important behavior is that full=False FORCES server_id to None
+    regardless of the node value; that is tested by test_note_to_model_slim_omits_detail_fields.
+    """
     real_note.color = gnode.ColorValue.Red
     result = note_to_model(real_note, full=True)
     assert result.color == "RED"
-    # url is populated from the note (non-None) in full mode
-    assert result.url is not None
-    # server_id passes through from gkeepapi (may be None for unsynced notes,
-    # but the field itself is not forced to None by slim mode)
-    slim_result = note_to_model(real_note, full=False)
-    assert slim_result.server_id is None  # slim always strips it
-    # full mode does NOT force it to None (value comes from the node)
-    # We verify it's distinct from the slim-mode forced None by checking
-    # the full result's server_id field is whatever gkeepapi provides
-    # (for an unsynced test node that's None from gkeepapi, which is fine)
-    assert "server_id" not in slim_result.model_dump(mode="json")  # stripped by serializer
+    assert result.url is not None  # gkeepapi generates a URL from the local node ID
 
 
 def test_note_to_model_slim_serializes_without_detail_keys(real_note):
