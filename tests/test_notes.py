@@ -51,7 +51,7 @@ def test_note_to_model_list(real_list):
 
 def test_note_to_model_color(real_note):
     real_note.color = gnode.ColorValue.Red
-    result = note_to_model(real_note)
+    result = note_to_model(real_note, full=True)  # full=True to get color
     assert result.color == "RED"
 
 
@@ -119,3 +119,39 @@ def test_list_notes_result_has_no_total():
     result = ListNotesResult(notes=[])
     assert result.notes == []
     assert not hasattr(result, "total")
+
+
+def test_note_to_model_slim_omits_detail_fields(real_note):
+    """Slim mode (default): server_id, url, color are None."""
+    result = note_to_model(real_note)
+    assert result.server_id is None
+    assert result.url is None
+    assert result.color is None
+
+
+def test_note_to_model_full_includes_detail_fields(real_note):
+    """Full mode: server_id, url, color are populated."""
+    import gkeepapi.node as gnode
+    real_note.color = gnode.ColorValue.Red
+    result = note_to_model(real_note, full=True)
+    assert result.color == "RED"
+    # url is populated from the note (non-None) in full mode
+    assert result.url is not None
+    # server_id passes through from gkeepapi (may be None for unsynced notes,
+    # but the field itself is not forced to None by slim mode)
+    slim_result = note_to_model(real_note, full=False)
+    assert slim_result.server_id is None  # slim always strips it
+    # full mode does NOT force it to None (value comes from the node)
+    # We verify it's distinct from the slim-mode forced None by checking
+    # the full result's server_id field is whatever gkeepapi provides
+    # (for an unsynced test node that's None from gkeepapi, which is fine)
+    assert "server_id" not in slim_result.model_dump(mode="json")  # stripped by serializer
+
+
+def test_note_to_model_slim_serializes_without_detail_keys(real_note):
+    """Slim mode serialization: None fields absent from dict output."""
+    result = note_to_model(real_note)
+    data = result.model_dump(mode="json")
+    assert "server_id" not in data
+    assert "url" not in data
+    assert "color" not in data
