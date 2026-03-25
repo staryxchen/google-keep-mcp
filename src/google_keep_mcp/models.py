@@ -34,7 +34,7 @@ class NoteInfo(BaseModel):
     color: str | None = None
 
     @model_serializer(mode="wrap")
-    def _serialize(self, handler):
+    def _serialize(self, handler) -> dict:
         data = handler(self)
         return {k: v for k, v in data.items() if v is not None}
 
