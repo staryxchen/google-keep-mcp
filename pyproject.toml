@@ -19,6 +19,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pre-commit>=4.0.0",
+    "ruff>=0.15.7",
     "pytest>=8.0.0",
     "pytest-asyncio>=0.24.0",
     "pytest-mock>=3.14.0",
@@ -40,3 +41,6 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
+
+[tool.ruff.format]
+# Accepting ruff defaults: double quotes, 4-space indent, magic trailing commas
