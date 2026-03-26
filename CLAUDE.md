@@ -22,9 +22,15 @@ uv pip install -e ".[dev]"
 
 # Inspect tools interactively
 .venv/bin/mcp dev src/google_keep_mcp/server.py
+
+# Install pre-commit hooks (run once after cloning)
+.venv/bin/pre-commit install
+
+# Run all hooks manually against all files
+.venv/bin/pre-commit run --all-files
 ```
 
-No linter is configured; the project uses standard Python conventions.
+Ruff is configured for linting and formatting (see `.pre-commit-config.yaml` and `[tool.ruff]` in `pyproject.toml`).
 
 ## Architecture
 
