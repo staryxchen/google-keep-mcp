@@ -201,12 +201,20 @@ mcp dev src/google_keep_mcp/server.py
 ## Development
 
 ```bash
-# Install with dev dependencies
+# Install with dev dependencies (includes pre-commit, ruff)
 uv pip install -e ".[dev]"
 
+# Install pre-commit hooks (run once after cloning)
+.venv/bin/pre-commit install
+
 # Run tests
-pytest tests/ -v
+.venv/bin/python3 -m pytest tests/ -v
+
+# Run all pre-commit hooks manually
+.venv/bin/pre-commit run --all-files
 ```
+
+Pre-commit hooks run automatically on `git commit`. If ruff makes autofix changes, the commit will be blocked — re-stage the modified files (`git add -u`) and commit again. If gitleaks detects a secret, remove it before retrying.
 
 ## Notes
 
