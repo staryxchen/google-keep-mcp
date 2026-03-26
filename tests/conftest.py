@@ -1,7 +1,8 @@
-import pytest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
+
 import gkeepapi
 import gkeepapi.node as gnode
+import pytest
 
 
 @pytest.fixture
@@ -14,6 +15,7 @@ def mock_keep():
 def inject_keep(mock_keep, monkeypatch):
     """Inject mock Keep client into state module."""
     import google_keep_mcp._state as state_module
+
     monkeypatch.setattr(state_module, "_keep", mock_keep)
 
 

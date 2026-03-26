@@ -1,9 +1,10 @@
 from __future__ import annotations
-from pydantic import BaseModel
-from mcp.server.fastmcp import FastMCP
 
-from ..models import LabelInfo, ToolResult
+from mcp.server.fastmcp import FastMCP
+from pydantic import BaseModel
+
 from .._state import get_keep
+from ..models import LabelInfo, ToolResult
 
 
 class ListLabelsResult(BaseModel):

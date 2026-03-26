@@ -1,9 +1,10 @@
 from __future__ import annotations
+
 import gkeepapi
 from mcp.server.fastmcp import FastMCP
 
-from ..models import NoteInfo, ToolResult, ListNotesResult
 from .._state import get_keep
+from ..models import ListNotesResult, NoteInfo, ToolResult
 from ._helpers import note_to_model
 
 
@@ -40,13 +41,15 @@ def register(mcp: FastMCP) -> None:
             if label_obj is None:
                 return ListNotesResult(notes=[])
 
-        results = list(keep.find(
-            archived=archived,
-            trashed=trashed,
-            pinned=pinned,
-            colors=colors,
-            labels=[label_obj] if label_obj else None,
-        ))
+        results = list(
+            keep.find(
+                archived=archived,
+                trashed=trashed,
+                pinned=pinned,
+                colors=colors,
+                labels=[label_obj] if label_obj else None,
+            )
+        )
         return ListNotesResult(notes=[note_to_model(n) for n in results])
 
     @mcp.tool()
@@ -107,7 +110,10 @@ def register(mcp: FastMCP) -> None:
             if isinstance(note, gkeepapi.node.Note):
                 note.text = text
             else:
-                return ToolResult(success=False, message=f"Note {note_id} is a list; use update_list_items to modify items")
+                return ToolResult(
+                    success=False,
+                    message=f"Note {note_id} is a list; use update_list_items to modify items",
+                )
         if pinned is not None:
             note.pinned = pinned
         if archived is not None:
@@ -116,7 +122,10 @@ def register(mcp: FastMCP) -> None:
             try:
                 note.color = gkeepapi.node.ColorValue(color.upper())
             except ValueError:
-                return ToolResult(success=False, message=f"Invalid color '{color}'. Valid values: DEFAULT, RED, PINK, YELLOW, BLUE, GRAY, TEAL, GREEN, CERULEAN, PURPLE, WHITE, BROWN, ORANGE, LIGHT_PINK, LIGHTSKYBLUE, MEMO")
+                return ToolResult(
+                    success=False,
+                    message=f"Invalid color '{color}'. Valid values: DEFAULT, RED, PINK, YELLOW, BLUE, GRAY, TEAL, GREEN, CERULEAN, PURPLE, WHITE, BROWN, ORANGE, LIGHT_PINK, LIGHTSKYBLUE, MEMO",  # noqa: E501
+                )
         keep.sync()
         return ToolResult(
             success=True,

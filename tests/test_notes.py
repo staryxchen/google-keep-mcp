@@ -1,4 +1,5 @@
 import gkeepapi.node as gnode
+
 from google_keep_mcp.tools._helpers import note_to_model
 
 
@@ -13,6 +14,7 @@ def test_get_note_returns_model(mock_keep, real_note):
 def test_get_note_returns_none_for_missing(mock_keep):
     mock_keep.get.return_value = None
     from google_keep_mcp._state import get_keep
+
     keep = get_keep()
     assert keep.get("nonexistent") is None
 
@@ -20,6 +22,7 @@ def test_get_note_returns_none_for_missing(mock_keep):
 def test_create_note_syncs(mock_keep, real_note):
     mock_keep.createNote.return_value = real_note
     from google_keep_mcp._state import get_keep
+
     keep = get_keep()
     keep.createNote(title="Test", text="Body")
     keep.sync()
@@ -30,6 +33,7 @@ def test_create_note_syncs(mock_keep, real_note):
 def test_delete_note_trashes(mock_keep, real_note):
     mock_keep.get.return_value = real_note
     from google_keep_mcp._state import get_keep
+
     keep = get_keep()
     note = keep.get(real_note.id)
     note.trash()
@@ -58,6 +62,7 @@ def test_note_to_model_color(real_note):
 def test_archive_note(mock_keep, real_note):
     mock_keep.get.return_value = real_note
     from google_keep_mcp._state import get_keep
+
     keep = get_keep()
     note = keep.get(real_note.id)
     note.archived = True
@@ -69,6 +74,7 @@ def test_archive_note(mock_keep, real_note):
 def test_pin_note(mock_keep, real_note):
     mock_keep.get.return_value = real_note
     from google_keep_mcp._state import get_keep
+
     keep = get_keep()
     note = keep.get(real_note.id)
     note.pinned = True
@@ -82,6 +88,7 @@ def test_untrash_note(mock_keep, real_note):
     assert real_note.trashed is True
     mock_keep.get.return_value = real_note
     from google_keep_mcp._state import get_keep
+
     keep = get_keep()
     note = keep.get(real_note.id)
     note.untrash()
@@ -94,6 +101,7 @@ def test_untrash_note_not_in_trash(mock_keep, real_note):
     assert real_note.trashed is False
     mock_keep.get.return_value = real_note
     from google_keep_mcp._state import get_keep
+
     keep = get_keep()
     note = keep.get(real_note.id)
     # Should not be trashed already
@@ -102,6 +110,7 @@ def test_untrash_note_not_in_trash(mock_keep, real_note):
 
 def test_label_info_has_no_id():
     from google_keep_mcp.models import LabelInfo
+
     lbl = LabelInfo(name="Work")
     assert lbl.name == "Work"
     assert not hasattr(lbl, "id")
@@ -109,6 +118,7 @@ def test_label_info_has_no_id():
 
 def test_tool_result_has_no_note_field():
     from google_keep_mcp.models import ToolResult
+
     result = ToolResult(success=True, message="ok")
     assert result.success is True
     assert not hasattr(result, "note")
@@ -116,6 +126,7 @@ def test_tool_result_has_no_note_field():
 
 def test_list_notes_result_has_no_total():
     from google_keep_mcp.models import ListNotesResult
+
     result = ListNotesResult(notes=[])
     assert result.notes == []
     assert not hasattr(result, "total")

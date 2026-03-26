@@ -1,8 +1,9 @@
 from __future__ import annotations
+
 from mcp.server.fastmcp import FastMCP
 
-from ..models import ListNotesResult
 from .._state import get_keep
+from ..models import ListNotesResult
 from ._helpers import note_to_model
 
 
@@ -22,11 +23,13 @@ def register(mcp: FastMCP) -> None:
             include_trashed: Whether to include trashed notes in results.
         """
         keep = get_keep()
-        results = list(keep.find(
-            query=query,
-            archived=include_archived,
-            trashed=include_trashed,
-        ))
+        results = list(
+            keep.find(
+                query=query,
+                archived=include_archived,
+                trashed=include_trashed,
+            )
+        )
         return ListNotesResult(
             notes=[note_to_model(n) for n in results],
         )

@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 import gkeepapi
-from ..models import NoteInfo, LabelInfo, ListItemInfo
+
+from ..models import LabelInfo, ListItemInfo, NoteInfo
 
 
 def note_to_model(note: gkeepapi.node.TopLevelNode, full: bool = False) -> NoteInfo:

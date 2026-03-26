@@ -1,5 +1,7 @@
 """Shared mutable state for the Keep client singleton."""
+
 from __future__ import annotations
+
 import gkeepapi
 
 _keep: gkeepapi.Keep | None = None

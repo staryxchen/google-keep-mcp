@@ -1,10 +1,13 @@
 from __future__ import annotations
+
 from typing import Any
+
 import gkeepapi
 from mcp.server.fastmcp import FastMCP
 
-from ..models import ToolResult
 from .._state import get_keep
+from ..models import ToolResult
+
 
 def register(mcp: FastMCP) -> None:
 

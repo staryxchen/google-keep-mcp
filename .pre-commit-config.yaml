@@ -6,7 +6,11 @@ repos:
         args: [--fix]
       - id: ruff-format
 
-  - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.30.1
+  - repo: local
     hooks:
       - id: gitleaks
+        name: gitleaks
+        description: Detect secrets using gitleaks
+        language: system
+        entry: gitleaks protect --staged --redact --no-banner
+        pass_filenames: false

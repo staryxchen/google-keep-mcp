@@ -1,10 +1,12 @@
 import gkeepapi.node as gnode
+
 from google_keep_mcp.tools._helpers import note_to_model
 
 
 def test_create_list_syncs(mock_keep, real_list):
     mock_keep.createList.return_value = real_list
     from google_keep_mcp._state import get_keep
+
     keep = get_keep()
     keep.createList(title="Shopping List", items=[("Milk", False), ("Eggs", True)])
     keep.sync()
@@ -15,6 +17,7 @@ def test_create_list_syncs(mock_keep, real_list):
 def test_update_list_add_item(mock_keep, real_list):
     mock_keep.get.return_value = real_list
     from google_keep_mcp._state import get_keep
+
     keep = get_keep()
     lst = keep.get(real_list.id)
     lst.add("Butter", False)
@@ -51,6 +54,7 @@ def test_sort_list_items(mock_keep, real_list):
     real_list.add("Apples", False)
     mock_keep.get.return_value = real_list
     from google_keep_mcp._state import get_keep
+
     keep = get_keep()
     lst = keep.get(real_list.id)
     lst.sort_items()
@@ -64,6 +68,7 @@ def test_sort_list_items_reverse(mock_keep, real_list):
     real_list.add("Apples", False)
     mock_keep.get.return_value = real_list
     from google_keep_mcp._state import get_keep
+
     keep = get_keep()
     lst = keep.get(real_list.id)
     lst.sort_items(reverse=True)

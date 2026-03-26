@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import json
 import logging
 import os
@@ -9,8 +10,8 @@ import gkeepapi
 from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
 
-from .config import Settings
 from . import _state
+from .config import Settings
 
 load_dotenv()
 
@@ -71,7 +72,7 @@ mcp = FastMCP(
 )
 
 # Import tool modules after mcp is defined to avoid circular imports
-from .tools import notes, lists, search, labels, sync  # noqa: E402
+from .tools import labels, lists, notes, search, sync  # noqa: E402
 
 notes.register(mcp)
 lists.register(mcp)
