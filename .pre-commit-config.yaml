@@ -6,6 +6,10 @@ repos:
         args: [--fix]
       - id: ruff-format
 
+  # Note: uses system-installed gitleaks binary (language: system) because the
+  # remote hook requires Go 1.24+ to build from source. Install gitleaks manually:
+  #   macOS:  brew install gitleaks
+  #   Linux:  https://github.com/gitleaks/gitleaks/releases
   - repo: local
     hooks:
       - id: gitleaks

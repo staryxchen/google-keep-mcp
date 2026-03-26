@@ -124,7 +124,12 @@ def register(mcp: FastMCP) -> None:
             except ValueError:
                 return ToolResult(
                     success=False,
-                    message=f"Invalid color '{color}'. Valid values: DEFAULT, RED, PINK, YELLOW, BLUE, GRAY, TEAL, GREEN, CERULEAN, PURPLE, WHITE, BROWN, ORANGE, LIGHT_PINK, LIGHTSKYBLUE, MEMO",  # noqa: E501
+                    message=(
+                        f"Invalid color '{color}'. Valid values: "
+                        "DEFAULT, RED, PINK, YELLOW, BLUE, GRAY, TEAL, "
+                        "GREEN, CERULEAN, PURPLE, WHITE, BROWN, ORANGE, "
+                        "LIGHT_PINK, LIGHTSKYBLUE, MEMO"
+                    ),
                 )
         keep.sync()
         return ToolResult(
