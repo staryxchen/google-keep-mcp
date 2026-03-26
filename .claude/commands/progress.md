@@ -15,9 +15,7 @@
    - 若状态为 `state_waiting`，提示「该任务当前等待他人反馈，是否已收到反馈？是否切换为进行中？」
      - 用户确认：先加 state_doing，再移除 state_waiting
      - 用户拒绝：仅追加进展记录，不改变状态
-   - 若状态为 `state_todo` 或无 state 标签，告知用户当前状态，询问是否同时将状态切换为 `state_doing`：
-     - 用户确认：先加 state_doing，再移除旧 state 标签（若有）
-     - 用户拒绝：仅追加进展记录，不改变状态
+   - 若状态为 `state_todo` 或无 state 标签，直接切换为 `state_doing`（先加 state_doing，再移除旧 state 标签（若有）），无需询问
 4. **若用户已在 $ARGUMENTS 中提供了进展内容（note_id 之后有文字），直接使用该内容，跳到步骤 7**
 5. **收集上下文，生成进展摘要：**
    从以下来源提炼这段时间的工作进展：
