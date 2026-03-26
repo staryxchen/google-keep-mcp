@@ -1,6 +1,6 @@
 # Google Keep MCP Server
 
-A [Model Context Protocol](https://modelcontextprotocol.io/) server that turns Google Keep into a **note-free personal task and knowledge system** for AI assistants. Rather than writing notes manually, you interact through a set of slash commands (`/todo`, `/doing`, `/done`, `/capture`, `/standup`, …) that handle all the bookkeeping — creating notes, transitioning states, appending progress logs, archiving completed work — so you stay focused on the actual work. The MCP layer wraps [gkeepapi](https://github.com/kiwiz/gkeepapi) for structured access to notes, lists, and labels, while the commands and label conventions on top form a complete, opinionated workflow.
+A [Model Context Protocol](https://modelcontextprotocol.io/) server that turns Google Keep into a **note-free personal task and knowledge system** for AI assistants. Rather than writing notes manually, you interact through a set of slash commands (`/todo`, `/doing`, `/done`, `/capture`, `/next`, …) that handle all the bookkeeping — creating notes, transitioning states, appending progress logs, archiving completed work — so you stay focused on the actual work. The MCP layer wraps [gkeepapi](https://github.com/kiwiz/gkeepapi) for structured access to notes, lists, and labels, while the commands and label conventions on top form a complete, opinionated workflow.
 
 ## Using with Claude Code
 
@@ -20,7 +20,6 @@ Copy `.claude/commands/` to `~/.claude/commands/` to make these available global
 | `/block` | `/block <note_id> <reason>` | Mark a task as self-blocked, append reason to note body |
 | `/waiting` | `/waiting <note_id> <who/why>` | Mark a task as waiting on someone else, append context to note body |
 | `/capture` | `/capture <content>` | Save a thought, decision, or finding to Keep |
-| `/standup` | `/standup` | Generate a standup summary from current tasks |
 | `/catchup` | `/catchup <project> [--last <N>d/w/m\|--since <date>]` | Summarize project notes by status; add time range for weekly report format |
 | `/explore` | `/explore [topic]` | Browse the knowledge base by topic; omit topic for a count overview |
 | `/tidy` | `/tidy` | Scan all active notes for label/title violations and interactively fix them |
@@ -45,7 +44,6 @@ The commands rely on a label schema defined in `~/.claude/CLAUDE.md`:
 /waiting 1a2b3c4d5e6f alice reviewing the PR    # handed off
 /capture decided to use SSE over polling # save a decision
 /done 1a2b3c4d5e6f complexity too high, shelved  # complete with note
-/standup                                 # wrap up the day
 /catchup <project> --last 7d             # weekly report for a project
 /explore <topic>                         # browse knowledge base by topic
 /tidy                                    # fix any notes with missing labels
