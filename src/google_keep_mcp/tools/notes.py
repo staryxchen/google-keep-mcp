@@ -86,6 +86,7 @@ def register(mcp: FastMCP) -> None:
         note_id: str,
         title: str | None = None,
         text: str | None = None,
+        append_text: str | None = None,
         pinned: bool | None = None,
         archived: bool | None = None,
         color: str | None = None,
@@ -96,10 +97,17 @@ def register(mcp: FastMCP) -> None:
             note_id: The note ID to update.
             title: New title (None = no change).
             text: New text content (None = no change). Not applicable to lists.
+            append_text: Text to append to the end of the note body (mutually exclusive with text).
+                         A newline is inserted between existing content and the new text.
+                         If the note is empty, the text is set directly without a leading newline.
             pinned: Set pinned state (None = no change).
             archived: Set archived state (None = no change).
             color: Set color by name e.g. "RED", "GREEN", "DEFAULT" (None = no change).
         """
+        if text is not None and append_text is not None:
+            return ToolResult(
+                success=False, message="'text' and 'append_text' are mutually exclusive"
+            )
         keep = get_keep()
         note = keep.get(note_id)
         if note is None:
@@ -114,6 +122,13 @@ def register(mcp: FastMCP) -> None:
                     success=False,
                     message=f"Note {note_id} is a list; use update_list_items to modify items",
                 )
+        if append_text is not None:
+            if not isinstance(note, gkeepapi.node.Note):
+                return ToolResult(
+                    success=False,
+                    message=f"Note {note_id} is a list; use update_list_items to modify items",
+                )
+            note.text = (note.text + "\n" + append_text) if note.text else append_text
         if pinned is not None:
             note.pinned = pinned
         if archived is not None:

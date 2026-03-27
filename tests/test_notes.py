@@ -161,3 +161,49 @@ def test_note_to_model_slim_serializes_without_detail_keys(real_note):
     assert "server_id" not in data
     assert "url" not in data
     assert "color" not in data
+
+
+def test_append_note_adds_newline(mock_keep, real_note):
+    real_note.text = "original"
+    mock_keep.get.return_value = real_note
+    from mcp.server.fastmcp import FastMCP
+
+    from google_keep_mcp.tools.notes import register
+
+    mcp = FastMCP("test")
+    register(mcp)
+    # Call update_note directly via the registered tool function
+    # Access inner function through mcp tools
+    update_fn = next(t.fn for t in mcp._tool_manager.list_tools() if t.name == "update_note")
+    result = update_fn(note_id=real_note.id, append_text="new content")
+    assert result.success is True
+    assert real_note.text == "original\nnew content"
+
+
+def test_append_note_empty_body(mock_keep, real_note):
+    real_note.text = ""
+    mock_keep.get.return_value = real_note
+    from mcp.server.fastmcp import FastMCP
+
+    from google_keep_mcp.tools.notes import register
+
+    mcp = FastMCP("test")
+    register(mcp)
+    update_fn = next(t.fn for t in mcp._tool_manager.list_tools() if t.name == "update_note")
+    result = update_fn(note_id=real_note.id, append_text="new content")
+    assert result.success is True
+    assert real_note.text == "new content"
+
+
+def test_append_note_mutually_exclusive_with_text(mock_keep, real_note):
+    mock_keep.get.return_value = real_note
+    from mcp.server.fastmcp import FastMCP
+
+    from google_keep_mcp.tools.notes import register
+
+    mcp = FastMCP("test")
+    register(mcp)
+    update_fn = next(t.fn for t in mcp._tool_manager.list_tools() if t.name == "update_note")
+    result = update_fn(note_id=real_note.id, text="full text", append_text="extra")
+    assert result.success is False
+    assert "mutually exclusive" in result.message
