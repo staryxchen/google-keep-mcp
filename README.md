@@ -10,6 +10,12 @@ With this MCP server and the included Claude Code slash commands, you get a ligh
 
 Copy `.claude/commands/` to `~/.claude/commands/` to make these available globally, and add the label conventions to your global `CLAUDE.md` (see below).
 
+```bash
+# Install slash commands globally
+mkdir -p ~/.claude/commands
+cp .claude/commands/* ~/.claude/commands/
+```
+
 | Command | Usage | Description |
 |---------|-------|-------------|
 | `/next` | `/next [project]` | List all active tasks grouped by project; optionally filter to a single project (e.g. `/next <project>`) |
