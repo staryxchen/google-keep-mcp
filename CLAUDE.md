@@ -49,6 +49,10 @@ Each tool domain has its own module under `src/google_keep_mcp/tools/`. Each mod
 3. Return a Pydantic model from `models.py` (or a new model defined in `models.py`)
 4. Call `keep.sync()` after any mutation
 
+### gkeepapi limitations
+
+- **No attachment/image upload**: gkeepapi cannot upload images, drawings, or any media to notes. Media properties (`blobs`, `images`, `drawings`, `audio`) are **read-only**. You can download existing media via `Keep.getMediaLink()`, but cannot create or attach new media. This is an upstream library limitation — do not attempt to implement upload features.
+
 ### Key design choices
 
 - **`ToolResult(success=False, message=...)`** is returned for domain errors (note not found, wrong type, duplicate label). Exceptions are only raised for infrastructure failures (auth errors, network).
@@ -64,6 +68,10 @@ Each tool domain has its own module under `src/google_keep_mcp/tools/`. Each mod
 | `GOOGLE_MASTER_TOKEN` | Yes | Master token (not password) — obtain via `gpsoauth` |
 | `KEEP_CACHE_FILE` | No | Path to JSON cache; enables incremental sync on restart |
 | `LOG_LEVEL` | No | `DEBUG`/`INFO`/`WARNING`/`ERROR` (default `INFO`) |
+
+## gkeepapi usage rule
+
+When unsure about gkeepapi capabilities, API surface, or behavior, **always check the official docs first**: https://gkeepapi.readthedocs.io/en/latest/. Do not guess or assume — the library has many read-only properties and undocumented quirks.
 
 ## Skill commands sync rule
 
